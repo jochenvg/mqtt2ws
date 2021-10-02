@@ -6,13 +6,25 @@
 
 
 
-# MQTT to MQTT over WebSocket Bridge
+# mqtt2ws - Transparently proxy MQTT to MQTT-over-Websocket
 
-A simple MQTT to MQTT over WebSocket bridge written in go.
+This is a simple MQTT to MQTT-over-Websocket proxy written in go.
 
-Will listten on a configurable TCP port for MQTT messages. When a client connects a Websocket connection is established to a configurable remote server.
-The MQTT messages from the TCP socket are bridged to the Websocket connection and vice versa.
+Mqtt2ws will listten on a configurable TCP port for MQTT messages. When a client connects a Websocket connection is established to a configurable remote server.
+The MQTT messages from the TCP socket are then bridged to the Websocket connection in both directions.
 
+## Why this is needed
+
+MQTT is a light-weight publish/subscribe protocol frequently used for communication with IoT devices. It can be transported over TCP, over TLS or over WebSocket.
+The MQTT payload is identical regardless of the the protocol used to transport it.
+
+TCP is a stream based protocol, meaning that as far the MQTT protocol using it is concerned, it is a continuous stream of bytes. 
+Websocket however is a message based a message/frame based protocol. 
+
+Translating from MQTT-over-Websocket to MQTT-over-TCP is easy. It suffices to merely send the payload of the WebSocket frames as a continuous stream of bytes.
+Translating from MQTT-over-TCP to MQTT-over-Websocket is more complicated. It requires to understand the boundaries of the MQTT messages, so they can be aligned with WebSocket frames.
+
+Mqtt2ws used the Eclipse paho MQTT libeary to read MQTT messages from the TCP stream, to then retransmit each in a Websocket frame.
 
 ## Getting Started
 
