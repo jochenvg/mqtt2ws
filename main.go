@@ -10,7 +10,7 @@ import (
 	"github.com/eclipse/paho.mqtt.golang/packets"
 )
 
-var listen = flag.String("listen", ":1884", "listen tcp socket")
+var listen = flag.String("listen", ":1883", "listen tcp socket")
 var url = flag.String("url", "ws://broker.hivemq.com:8000/mqtt", "websocket url")
 
 func main() {
