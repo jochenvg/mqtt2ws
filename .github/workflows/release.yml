@@ -9,9 +9,6 @@ on:
   release:
     types: [created]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   releases-matrix:
@@ -32,3 +29,4 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
+        binary_name: "mqtt2ws"
