@@ -6,7 +6,7 @@ import (
 	"log"
 	"net"
 
-	paho "github.com/eclipse/paho.mqtt.golang"
+	"github.com/eclipse/paho.mqtt.golang"
 	"github.com/eclipse/paho.mqtt.golang/packets"
 )
 
@@ -41,7 +41,7 @@ func main() {
 			defer s.Close()
 
 			// Create MQTT-WS client
-			ws, err := paho.NewWebsocket(*url, nil, 0, nil, nil)
+			ws, err := mqtt.NewWebsocket(*url, nil, 0, nil, nil)
 			if err != nil {
 				log.Println("Websocket error", err)
 				return
