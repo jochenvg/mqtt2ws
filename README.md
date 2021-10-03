@@ -8,12 +8,12 @@
 
 # mqtt2ws - Transparently proxy MQTT to MQTT-over-Websocket
 
-This is a simple MQTT to MQTT-over-Websocket proxy written in go.
+This is a simple MQTT to MQTT-over-Websocket proxy written in go which preserves MQTT packet alignment with websocket frames.
 
 Mqtt2ws will listten on a configurable TCP port for MQTT messages. When a client connects a Websocket connection is established to a configurable remote server.
 The MQTT messages from the TCP socket are then bridged to the Websocket connection in both directions.
 
-## Why this is needed
+## Background
 
 MQTT is a light-weight publish/subscribe protocol frequently used for communication with IoT devices. It can be transported over TCP, over TLS or over WebSocket.
 The MQTT payload is identical regardless of the the protocol used to transport it.
@@ -21,10 +21,13 @@ The MQTT payload is identical regardless of the the protocol used to transport i
 TCP is a stream based protocol, meaning that as far the MQTT protocol using it is concerned, it is a continuous stream of bytes. 
 Websocket however is a message based a message/frame based protocol. 
 
-Translating from MQTT-over-Websocket to MQTT-over-TCP is easy. It suffices to merely send the payload of the WebSocket frames as a continuous stream of bytes.
-Translating from MQTT-over-TCP to MQTT-over-Websocket is more complicated. It requires to understand the boundaries of the MQTT messages, so they can be aligned with WebSocket frames.
+The MQTT-over-WebSocket spec does not require alignment of MQTT messages with WebSocket frames, and WebSocket frames can contain more than one MQTT message or partial messages.
+It appears however that not all MQTT server implementations, including Mosquitto when used with the "protocol websockets" directive adhere to this permissive soec, and connections fail when not aligned.
 
-Mqtt2ws used the Eclipse paho MQTT libeary to read MQTT messages from the TCP stream, to then retransmit each in a Websocket frame.
+Many MQTT-over-WebSocket client inplementaations ensure alignment of MQTT messages witg WebSocket frames, including the Eclipse Paho client libraries.
+
+Mqtt2ws uses the Eclipse Paho library to read MQTT messages from the TCP session and send them over the WebSocket so alignment is preserved.
+
 
 ## Getting Started
 
